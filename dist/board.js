@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { PieceType, currentPieceImageType } from "./main.js";
+import { PieceType, currentPieceImageType, stockfish, stockfishDepth } from "./main.js";
 import { Piece } from "./piece.js";
 import { Square } from "./square.js";
 import { Utils } from "./utils.js";
@@ -19,8 +19,9 @@ export class Board {
          * false = black's turn
          */
         this.turn = true;
-        this.player = true;
+        this.playerColor = true;
         this.moves = [];
+        this.moveCount = 0;
         this.promoting = false;
         this.squares = [];
         for (let x = 0; x < 8; x++) {
@@ -56,10 +57,11 @@ export class Board {
                 x++;
             }
         }
+        stockfish.postMessage("position fen " + fen);
     }
     selectSquare(square) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.promoting)
+            if (this.promoting || this.turn != this.playerColor)
                 return;
             if (square === null || square === void 0 ? void 0 : square.element.classList.contains("can-move"))
                 return;
@@ -76,7 +78,7 @@ export class Board {
     }
     showMoves(square) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.promoting)
+            if (this.promoting || this.turn != this.playerColor)
                 return;
             for (let x = 0; x < this.squares.length; x++) {
                 for (let y = 0; y < this.squares[x].length; y++) {
@@ -123,7 +125,7 @@ export class Board {
             }
         });
     }
-    actuallyMakeMove(move) {
+    actuallyMakeMove(move, isComputerMove = false) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             if (move == null)
@@ -204,10 +206,10 @@ export class Board {
                 if (winText == null)
                     return;
                 if (yield this.isInCheck(this.turn)) {
-                    winText.innerText = "You " + (this.turn == this.player ? "Lose" : "Win") + "!";
+                    winText.innerText = "You " + (this.turn == this.playerColor ? "Lose" : "Win") + "!";
                 }
                 else {
-                    winText.innerText = "Stalemate! ";
+                    winText.innerText = "Draw!";
                 }
                 winElem.style.display = "block";
                 const restart = document.getElementById("restart");
@@ -216,8 +218,56 @@ export class Board {
                 restart.addEventListener("click", () => {
                     location.reload();
                 });
+                return;
             }
-            console.log(this.moves.length % 5 == 0);
+            if (isComputerMove)
+                return;
+            this.moveCount++;
+            console.log(this.moveCount);
+            if (this.moveCount % 10 == 0) {
+                const board = document.querySelector("#board");
+                board.style.transform = "scaleY(" + (this.playerColor ? -1 : 1) + ")";
+                setTimeout(() => {
+                    const squares = document.querySelectorAll(".square");
+                    squares.forEach((square) => {
+                        square.style.transform = "scaleY(" + (this.playerColor ? 1 : -1) + ")";
+                    });
+                }, 500);
+                this.playerColor = !this.playerColor;
+            }
+            if (this.turn != this.playerColor) {
+                console.log("stockfish move");
+                const fen = this.getFen();
+                console.log(fen);
+                stockfish.postMessage("position fen " + fen);
+                stockfish.postMessage("isready");
+                let isReady = false;
+                stockfish.onmessage = (event) => {
+                    const message = event.data;
+                    if (message == "readyok") {
+                        isReady = true;
+                    }
+                };
+                yield new Promise((resolve) => {
+                    const interval = setInterval(() => {
+                        if (isReady) {
+                            clearInterval(interval);
+                            resolve();
+                        }
+                    }, 100);
+                });
+                stockfish.postMessage("go depth " + stockfishDepth);
+                stockfish.onmessage = (event) => {
+                    const message = event.data;
+                    if (message.startsWith("bestmove")) {
+                        const moveStr = message.split(" ")[1];
+                        console.log(moveStr);
+                        const move = Utils.getMoveFromStr(moveStr);
+                        move.id = crypto.randomUUID();
+                        this.actuallyMakeMove(move, true);
+                    }
+                };
+            }
         });
     }
     isCheckmate(color) {
@@ -363,5 +413,33 @@ export class Board {
             }
         }
         return null;
+    }
+    getFen() {
+        let fen = "";
+        for (let y = 0; y < 8; y++) {
+            let empty = 0;
+            for (let x = 0; x < 8; x++) {
+                const square = this.getSquare(x, y);
+                if (square == null)
+                    continue;
+                if (square.piece == null) {
+                    empty++;
+                }
+                else {
+                    if (empty > 0) {
+                        fen += empty.toString();
+                        empty = 0;
+                    }
+                    const char = Utils.getPieceChar(square.piece.type);
+                    fen += !square.piece.isDark ? char.toLowerCase() : char;
+                }
+            }
+            if (empty > 0)
+                fen += empty.toString();
+            if (y < 7)
+                fen += "/";
+        }
+        fen += " " + (this.turn ? "w" : "b");
+        return fen;
     }
 }

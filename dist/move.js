@@ -1,6 +1,6 @@
 import { PieceType } from "./main.js";
 export class Move {
-    constructor(from, to, isEnPassasnt = false, castleRook = null, promote = false) {
+    constructor(from, to, isEnPassasnt = false, castleRook = null, promote = false, promoteTo = PieceType.Pawn) {
         this.toPiece = null;
         this.id = "";
         this.isEnPassasnt = false;
@@ -17,5 +17,6 @@ export class Move {
         this.isEnPassasnt = isEnPassasnt;
         this.castleRook = castleRook;
         this.promote = promote;
+        this.promoteTo = promoteTo;
     }
 }

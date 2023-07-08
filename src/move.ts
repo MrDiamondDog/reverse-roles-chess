@@ -18,7 +18,8 @@ export class Move {
         to: Square,
         isEnPassasnt: boolean = false,
         castleRook: Square | null = null,
-        promote: boolean = false
+        promote: boolean = false,
+        promoteTo: PieceType = PieceType.Pawn
     ) {
         this.from = from;
         this.to = to;
@@ -30,5 +31,6 @@ export class Move {
         this.isEnPassasnt = isEnPassasnt;
         this.castleRook = castleRook;
         this.promote = promote;
+        this.promoteTo = promoteTo;
     }
 }

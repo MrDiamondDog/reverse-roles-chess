@@ -1,6 +1,20 @@
 import {Board} from "./board.js";
+export const stockfish = new Worker("../node_modules/stockfish/src/stockfish.js");
 
 export const board = new Board();
+
+export const difficultyDepths = {
+    "0": 0, // little baby
+    "1": 2, // big baby
+    "2": 4, // eh
+    "3": 6, // ok this is hard
+    "4": 8, // help
+    "5": 10, // SOS
+    "6": 15, // :skull:
+    "7": 20 // you dare cheat?
+};
+
+export let stockfishDepth = difficultyDepths["7"];
 
 export enum PieceType {
     Pawn = "pawn",
@@ -12,13 +26,33 @@ export enum PieceType {
 }
 
 export enum PieceImageType {
-    Pixel = "Pixel",
-    Alpha = "Alpha"
+    Pixel = "Pixel"
 }
 
 export let currentPieceImageType = PieceImageType.Pixel;
 
 board.loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+
+const startMenu = document.getElementById("start") as HTMLDivElement;
+const diffSelect = document.getElementById("difficulty") as HTMLDivElement;
+
+const diffButtons = diffSelect.querySelectorAll("button");
+diffButtons.forEach((button) => {
+    button.onclick = () => {
+        diffButtons.forEach((button) => {
+            button.classList.remove("selected");
+        });
+        button.classList.add("selected");
+        stockfishDepth =
+            difficultyDepths[button.dataset.difficulty! as keyof typeof difficultyDepths];
+    };
+});
+
+const startButton = startMenu.querySelector("#start-button") as HTMLButtonElement;
+startButton.onclick = () => {
+    if (stockfishDepth == difficultyDepths["7"]) return;
+    startMenu.style.display = "none";
+};
 
 // const expected = [1, 20, 400, 8902, 197281, 4865609, 119060324];
 

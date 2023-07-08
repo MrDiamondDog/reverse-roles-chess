@@ -9,5 +9,8 @@
     "devDependencies": {
         "@types/node": "^20.4.0",
         "typescript": "^5.1.6"
+    },
+    "dependencies": {
+        "stockfish": "^11.0.0"
     }
 }

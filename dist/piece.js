@@ -64,10 +64,12 @@ export class Piece {
             moves.push(new Move(this.square, square));
         }
         // two forward
-        if (this.square.y == (this.isDark ? 6 : 1)) {
-            square = this.square.board.getSquare(this.square.x, this.square.y + forward * 2);
-            if (square && !square.piece) {
-                moves.push(new Move(this.square, square));
+        if (square && !square.piece) {
+            if (this.square.y == (this.isDark ? 6 : 1)) {
+                square = this.square.board.getSquare(this.square.x, this.square.y + forward * 2);
+                if (square && !square.piece) {
+                    moves.push(new Move(this.square, square));
+                }
             }
         }
         // capture
