@@ -1,0 +1,13 @@
+{
+    "name": "roles_reversed_chess",
+    "version": "0.0.1",
+    "description": "",
+    "author": "",
+    "scripts": {
+        "watch": "tsc -w"
+    },
+    "devDependencies": {
+        "@types/node": "^20.4.0",
+        "typescript": "^5.1.6"
+    }
+}

@@ -1,0 +1,62 @@
+:root {
+    --light-square: #dbdbdb;
+    --dark-square: #058f1e;
+}
+
+/* 8x8 grid */
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 800px;
+    height: 800px;
+    border: 5px solid black;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    color: var(--light-square);
+    background-color: var(--light-square);
+    width: 100px;
+    height: 100px;
+    transition: all 0.2s ease-in-out;
+}
+
+.square.selected {
+    background-color: rgb(80, 135, 255) !important;
+}
+
+.square.can-move {
+    background-color: rgb(255, 103, 80) !important;
+}
+
+.square.can-move:has(.piece) {
+    background-color: rgb(178, 88, 28) !important;
+}
+
+.square.light {
+    color: var(--light-square);
+    background-color: var(--light-square);
+}
+
+.square.dark {
+    color: var(--dark-square);
+    background-color: var(--dark-square);
+}
+
+.square .piece {
+    font-size: 3rem;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transition: inherit;
+}
+
+.square .piece .piece-img {
+    width: 100%;
+    height: 100%;
+    user-select: none;
+}
