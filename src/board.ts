@@ -1,7 +1,8 @@
-import {PieceType} from "./main.js";
+import {PieceType, currentPieceImageType} from "./main.js";
 import {Move} from "./move.js";
 import {Piece} from "./piece.js";
 import {Square} from "./square.js";
+import {Utils} from "./utils.js";
 
 export class Board {
     public squares: Square[][];
@@ -11,7 +12,9 @@ export class Board {
      * false = black's turn
      */
     public turn: boolean = true;
+    public player: boolean = true;
     public moves: string[] = [];
+    public promoting: boolean = false;
 
     constructor() {
         this.squares = [];
@@ -51,6 +54,7 @@ export class Board {
     }
 
     public async selectSquare(square: Square | null) {
+        if (this.promoting) return;
         if (square?.element.classList.contains("can-move")) return;
         if (this.selectedPiece) {
             this.selectedPiece.element.classList.remove("selected");
@@ -63,6 +67,7 @@ export class Board {
     }
 
     public async showMoves(square: Square) {
+        if (this.promoting) return;
         for (let x = 0; x < this.squares.length; x++) {
             for (let y = 0; y < this.squares[x].length; y++) {
                 const square = this.squares[x][y];
@@ -80,6 +85,7 @@ export class Board {
             move.id = uuid;
             move.to.element.classList.add("can-move");
             move.to.listener = async () => {
+                if (this.promoting) return;
                 await this.actuallyMakeMove(move);
             };
             move.to.element.addEventListener("click", move.to.listener, {
@@ -106,6 +112,41 @@ export class Board {
     public async actuallyMakeMove(move: Move | null) {
         if (move == null) return;
         if (this.moves.includes(move.id)) return;
+        if (move.promote) {
+            this.promoting = true;
+            const promoteDialog = document.getElementById("promote") as HTMLDivElement;
+            const promoteButtons = promoteDialog.querySelectorAll("button");
+            for (let i = 0; i < promoteButtons.length; i++) {
+                const button = promoteButtons[i];
+                const type = Utils.getPieceFromStr(button.dataset.piece!);
+                button.addEventListener(
+                    "click",
+                    () => {
+                        move.promoteTo = type;
+                        promoteDialog.style.display = "none";
+                    },
+                    {once: true}
+                );
+                button.innerHTML = `<img src="./img/${currentPieceImageType}/w${Utils.getPieceChar(
+                    type
+                )}.svg" alt="${type}"/>`;
+            }
+            promoteDialog.style.display = "grid";
+
+            await new Promise<void>((resolve) => {
+                const interval = setInterval(() => {
+                    if (move.promoteTo != PieceType.Pawn) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 100);
+            });
+
+            this.promoting = false;
+        }
+        const audio = new Audio("./sound/put_down.wav");
+        audio.play();
+
         this.makeMove(move);
         this.turn = !this.turn;
         this.selectSquare(null);
@@ -149,10 +190,27 @@ export class Board {
 
         const checkmate = await this.isCheckmate(this.turn);
         if (checkmate) {
-            const checkmateElem = document.getElementById("winner");
-            if (checkmateElem == null) return;
-            checkmateElem.innerText = "Checkmate! " + (this.turn ? "Black" : "White") + " wins!";
+            const winElem = document.getElementById("win");
+            if (winElem == null) return;
+            const winText = winElem.querySelector("h1");
+            if (winText == null) return;
+
+            if (await this.isInCheck(this.turn)) {
+                winText.innerText = "You " + (this.turn == this.player ? "Lose" : "Win") + "!";
+            } else {
+                winText.innerText = "Stalemate! ";
+            }
+
+            winElem.style.display = "block";
+
+            const restart = document.getElementById("restart");
+            if (restart == null) return;
+            restart.addEventListener("click", () => {
+                location.reload();
+            });
         }
+
+        console.log(this.moves.length % 5 == 0);
     }
 
     public async isCheckmate(color: boolean): Promise<boolean> {
@@ -257,7 +315,12 @@ export class Board {
         if (from.piece == null) return;
         if (from.piece.isDark != this.turn) return;
         if (to.piece != null && to.piece.isDark == this.turn) return;
-        to.setPiece(from.piece);
+
+        if (move.promote) {
+            to.setPiece(new Piece(move.to, move.promoteTo, move.fromPiece.isDark));
+        } else {
+            to.setPiece(from.piece);
+        }
         from.setPiece(null);
     }
 

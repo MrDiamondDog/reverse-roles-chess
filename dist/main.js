@@ -2,12 +2,12 @@ import { Board } from "./board.js";
 export const board = new Board();
 export var PieceType;
 (function (PieceType) {
-    PieceType[PieceType["Pawn"] = 0] = "Pawn";
-    PieceType[PieceType["Knight"] = 1] = "Knight";
-    PieceType[PieceType["Bishop"] = 2] = "Bishop";
-    PieceType[PieceType["Rook"] = 3] = "Rook";
-    PieceType[PieceType["Queen"] = 4] = "Queen";
-    PieceType[PieceType["King"] = 5] = "King";
+    PieceType["Pawn"] = "pawn";
+    PieceType["Knight"] = "knight";
+    PieceType["Bishop"] = "bishop";
+    PieceType["Rook"] = "rook";
+    PieceType["Queen"] = "queen";
+    PieceType["King"] = "king";
 })(PieceType || (PieceType = {}));
 export var PieceImageType;
 (function (PieceImageType) {

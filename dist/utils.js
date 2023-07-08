@@ -1,5 +1,29 @@
 import { PieceType } from "./main.js";
 export class Utils {
+    static getPieceFromStr(piece) {
+        let type = PieceType.Pawn;
+        switch (piece.toLowerCase()) {
+            case "pawn":
+                type = PieceType.Pawn;
+                break;
+            case "knight":
+                type = PieceType.Knight;
+                break;
+            case "bishop":
+                type = PieceType.Bishop;
+                break;
+            case "rook":
+                type = PieceType.Rook;
+                break;
+            case "queen":
+                type = PieceType.Queen;
+                break;
+            case "king":
+                type = PieceType.King;
+                break;
+        }
+        return type;
+    }
     static getPieceStr(piece) {
         switch (piece) {
             case PieceType.Pawn:

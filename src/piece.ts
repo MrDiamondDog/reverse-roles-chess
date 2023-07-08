@@ -110,6 +110,12 @@ export class Piece {
             }
         }
 
+        for (let i = 0; i < moves.length; i++) {
+            if (moves[i].to.y == (this.isDark ? 0 : 7)) {
+                moves[i].promote = true;
+            }
+        }
+
         return moves;
     }
 

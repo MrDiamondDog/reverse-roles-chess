@@ -3,12 +3,12 @@ import {Board} from "./board.js";
 export const board = new Board();
 
 export enum PieceType {
-    Pawn,
-    Knight,
-    Bishop,
-    Rook,
-    Queen,
-    King
+    Pawn = "pawn",
+    Knight = "knight",
+    Bishop = "bishop",
+    Rook = "rook",
+    Queen = "queen",
+    King = "king"
 }
 
 export enum PieceImageType {

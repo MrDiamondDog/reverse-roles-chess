@@ -7,20 +7,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <link rel="stylesheet" href="css/main.css" />
-
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline'"
-        />
-        <meta
-            http-equiv="X-Content-Security-Policy"
-            content="default-src 'self'; script-src 'self' 'unsafe-inline'"
-        />
     </head>
 
     <body>
         <div id="board"></div>
-        <h1 id="winner"></h1>
+        <div id="win" style="display: none">
+            <h1>You Win!</h1>
+            <button id="restart">Restart</button>
+        </div>
+        <div id="promote" style="display: none">
+            <button id="promote-queen" data-piece="queen">
+                <img src="./img/Pixel/wQ.svg" alt="queen" />
+            </button>
+            <button id="promote-rook" data-piece="rook">
+                <img src="./img/Pixel/wR.svg" alt="queen" />
+            </button>
+            <button id="promote-bishop" data-piece="bishop">
+                <img src="./img/Pixel/wB.svg" alt="queen" />
+            </button>
+            <button id="promote-knight" data-piece="knight">
+                <img src="./img/Pixel/wN.svg" alt="queen" />
+            </button>
+        </div>
 
         <script src="dist/main.js" type="module"></script>
     </body>

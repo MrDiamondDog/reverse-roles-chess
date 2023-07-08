@@ -3,6 +3,31 @@ import {Move} from "./move.js";
 import {Square} from "./square.js";
 
 export class Utils {
+    public static getPieceFromStr(piece: string) {
+        let type = PieceType.Pawn;
+        switch (piece.toLowerCase()) {
+            case "pawn":
+                type = PieceType.Pawn;
+                break;
+            case "knight":
+                type = PieceType.Knight;
+                break;
+            case "bishop":
+                type = PieceType.Bishop;
+                break;
+            case "rook":
+                type = PieceType.Rook;
+                break;
+            case "queen":
+                type = PieceType.Queen;
+                break;
+            case "king":
+                type = PieceType.King;
+                break;
+        }
+        return type;
+    }
+
     public static getPieceStr(piece: PieceType) {
         switch (piece) {
             case PieceType.Pawn:
