@@ -10,7 +10,13 @@
     </head>
 
     <body>
-        <div id="board"></div>
+        <div id="content">
+            <div id="board"></div>
+            <div id="info">
+                <h1 id="turn">Your Turn</h1>
+                <h2 id="moves-until-switch">Moves Until Switch: 10</h2>
+            </div>
+        </div>
         <div id="win" style="display: none">
             <h1>You Win!</h1>
             <button id="restart">Restart</button>
@@ -29,8 +35,95 @@
                 <img src="./img/Pixel/wN.svg" alt="queen" />
             </button>
         </div>
+
+        <div id="credits" style="display: none">
+            <h1>Credits</h1>
+            <img
+                src="./img/jamlogo2023.png"
+                onclick="window.open('https://itch.io/jam/gmtk-2023')"
+            />
+            <br />
+            <h3>Programming</h3>
+            <table>
+                <tr>
+                    <td><strong>Everything</strong></td>
+                    <td><a href="https://mrdiamond.ml/" target="_blank">MrDiamond</a></td>
+                </tr>
+            </table>
+            <br />
+            <h3>Art</h3>
+            <table>
+                <tr>
+                    <td><strong>Chess Pieces</strong></td>
+                    <td>
+                        <a
+                            target="_blank"
+                            href="https://github.com/lichess-org/lila/tree/master/public/piece"
+                            >Lichess</a
+                        >
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <h3>Sound Effects</h3>
+            <table>
+                <tr>
+                    <td><strong>All SFX</strong></td>
+                    <td>
+                        <a target="_blank" href="https://freesound.org/">Freesound.org</a>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <h3>AI</h3>
+            <table>
+                <tr>
+                    <td><strong>Chess Engine</strong></td>
+                    <td>
+                        <a target="_blank" href="https://stockfishchess.org/">Stockfish 11</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Implementation</strong></td>
+                    <td>
+                        <a
+                            target="_blank"
+                            href="https://github.com/nmrugg/stockfish.js/tree/Stockfish11"
+                            >Stockfish.js</a
+                        >
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <br />
+            <br />
+            <button onclick="document.getElementById('credits').style.display = 'none'">
+                Close
+            </button>
+        </div>
+
         <div id="start">
             <h1>Just A Normal Game Of Chess</h1>
+            <h3>Piece Set</h3>
+            <select id="piece-set">
+                <option value="Pixel">Pixel</option>
+                <option value="Alpha">Alpha</option>
+            </select>
+            <div id="piece-prev">
+                <img src="./img/Pixel/wP.svg" data-piece="wP" alt="white pawn" />
+                <img src="./img/Pixel/wR.svg" data-piece="wR" alt="white rook" />
+                <img src="./img/Pixel/wN.svg" data-piece="wN" alt="white knight" />
+                <img src="./img/Pixel/wB.svg" data-piece="wB" alt="white bishop" />
+                <img src="./img/Pixel/wQ.svg" data-piece="wQ" alt="white queen" />
+                <img src="./img/Pixel/wK.svg" data-piece="wK" alt="white king" />
+                <br />
+                <img src="./img/Pixel/bP.svg" data-piece="bP" alt="black pawn" />
+                <img src="./img/Pixel/bR.svg" data-piece="bR" alt="black rook" />
+                <img src="./img/Pixel/bN.svg" data-piece="bN" alt="black knight" />
+                <img src="./img/Pixel/bB.svg" data-piece="bB" alt="black bishop" />
+                <img src="./img/Pixel/bQ.svg" data-piece="bQ" alt="black queen" />
+                <img src="./img/Pixel/bK.svg" data-piece="bK" alt="black king" />
+            </div>
             <h3>Difficulty</h3>
             <div id="difficulty">
                 <button class="difficulty" data-difficulty="0">Little Baby</button>
@@ -42,6 +135,13 @@
                 <button class="difficulty" data-difficulty="6">:skull:</button>
             </div>
             <button id="start-button">Start</button>
+            <br />
+            <button
+                id="credits-button"
+                onclick="document.getElementById('credits').style.display = 'block'"
+            >
+                Credits
+            </button>
         </div>
 
         <script src="dist/main.js" type="module"></script>

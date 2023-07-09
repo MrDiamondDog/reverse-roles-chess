@@ -192,7 +192,8 @@ export class Board {
         }
 
         const checkmate = await this.isCheckmate(this.turn);
-        if (checkmate) {
+        const stalemate = this.isStalemate();
+        if (checkmate || stalemate) {
             const winElem = document.getElementById("win");
             if (winElem == null) return;
             const winText = winElem.querySelector("h1");
@@ -214,11 +215,13 @@ export class Board {
             return;
         }
 
+        const turnText = document.getElementById("turn");
+        if (turnText == null) return;
+        turnText.innerText = (this.turn == this.playerColor ? "Your" : "Computer's") + " Turn";
+
         if (isComputerMove) return;
 
         this.moveCount++;
-
-        console.log(this.moveCount);
 
         if (this.moveCount % 10 == 0) {
             const board = document.querySelector("#board") as HTMLDivElement;
@@ -270,11 +273,28 @@ export class Board {
                 }
             };
         }
+
+        const moveCountElem = document.getElementById("moves-until-switch");
+        if (moveCountElem != null) {
+            moveCountElem.innerText = "Moves Until Switch: " + (10 - (this.moveCount % 10));
+        }
     }
 
     public async isCheckmate(color: boolean): Promise<boolean> {
         const moves = await this.getValidMovesFromColor(color);
         return moves.length == 0;
+    }
+
+    public isStalemate(): boolean {
+        for (let x = 0; x < this.squares.length; x++) {
+            for (let y = 0; y < this.squares[x].length; y++) {
+                const square = this.squares[x][y];
+                if (square.piece != null && !(square.piece.type == PieceType.King)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public async getMoves(includeCastling: boolean = true): Promise<Move[]> {

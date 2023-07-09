@@ -2,14 +2,14 @@ import { Board } from "./board.js";
 export const stockfish = new Worker("../node_modules/stockfish/src/stockfish.js");
 export const board = new Board();
 export const difficultyDepths = {
-    "0": 0,
-    "1": 2,
-    "2": 4,
-    "3": 6,
-    "4": 8,
-    "5": 10,
-    "6": 15,
-    "7": 20 // you dare cheat?
+    "0": 3,
+    "1": 5,
+    "2": 9,
+    "3": 12,
+    "4": 15,
+    "5": 17,
+    "6": 20,
+    "7": 25 // you dare cheat?
 };
 export let stockfishDepth = difficultyDepths["7"];
 export var PieceType;
@@ -24,7 +24,18 @@ export var PieceType;
 export var PieceImageType;
 (function (PieceImageType) {
     PieceImageType["Pixel"] = "Pixel";
+    PieceImageType["Alpha"] = "Alpha";
 })(PieceImageType || (PieceImageType = {}));
+const pieceImageSelect = document.getElementById("piece-set");
+const piecePreview = document.getElementById("piece-prev");
+pieceImageSelect.addEventListener("change", () => {
+    const value = pieceImageSelect.value;
+    currentPieceImageType = value;
+    const previewPieces = piecePreview.querySelectorAll("img");
+    previewPieces.forEach((piece) => {
+        piece.src = `./img/${value}/${piece.dataset.piece}.svg`;
+    });
+});
 export let currentPieceImageType = PieceImageType.Pixel;
 board.loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 const startMenu = document.getElementById("start");

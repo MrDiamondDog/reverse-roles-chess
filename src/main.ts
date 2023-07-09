@@ -4,14 +4,14 @@ export const stockfish = new Worker("../node_modules/stockfish/src/stockfish.js"
 export const board = new Board();
 
 export const difficultyDepths = {
-    "0": 0, // little baby
-    "1": 2, // big baby
-    "2": 4, // eh
-    "3": 6, // ok this is hard
-    "4": 8, // help
-    "5": 10, // SOS
-    "6": 15, // :skull:
-    "7": 20 // you dare cheat?
+    "0": 3, // little baby
+    "1": 5, // big baby
+    "2": 9, // eh
+    "3": 12, // ok this is hard
+    "4": 15, // help
+    "5": 17, // SOS
+    "6": 20, // :skull:
+    "7": 25 // you dare cheat?
 };
 
 export let stockfishDepth = difficultyDepths["7"];
@@ -26,8 +26,20 @@ export enum PieceType {
 }
 
 export enum PieceImageType {
-    Pixel = "Pixel"
+    Pixel = "Pixel",
+    Alpha = "Alpha"
 }
+
+const pieceImageSelect = document.getElementById("piece-set") as HTMLSelectElement;
+const piecePreview = document.getElementById("piece-prev") as HTMLDivElement;
+pieceImageSelect.addEventListener("change", () => {
+    const value = pieceImageSelect.value as PieceImageType;
+    currentPieceImageType = value;
+    const previewPieces = piecePreview.querySelectorAll("img");
+    previewPieces.forEach((piece) => {
+        piece.src = `./img/${value}/${piece.dataset.piece}.svg`;
+    });
+});
 
 export let currentPieceImageType = PieceImageType.Pixel;
 

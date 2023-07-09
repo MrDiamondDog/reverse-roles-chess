@@ -55,7 +55,6 @@ export class Piece {
         });
     }
     getPawnMoves() {
-        // two forward on 2nd row from bottom, one forward otherwise
         // forward
         let moves = [];
         let forward = this.isDark ? -1 : 1;
@@ -82,7 +81,7 @@ export class Piece {
             moves.push(new Move(this.square, square));
         }
         // en passant
-        if (this.square.y == (this.isDark ? 4 : 3)) {
+        if (this.square.y == (this.isDark ? 3 : 4)) {
             square = this.square.board.getSquare(this.square.x - 1, this.square.y);
             if (square &&
                 square.piece &&
