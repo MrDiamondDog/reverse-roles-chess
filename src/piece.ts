@@ -10,6 +10,7 @@ export class Piece {
     public isDark: boolean;
     public lastMove: number = 0;
     public hasMoved: boolean = false;
+    public image: HTMLImageElement;
 
     constructor(square: Square, type: PieceType, isDark: boolean) {
         this.square = square;
@@ -21,12 +22,16 @@ export class Piece {
         this.element.classList.add(Utils.getPieceStr(type));
         this.element.classList.add(isDark ? "light" : "dark");
 
-        const image = document.createElement("img");
-        image.src = `./img/${currentPieceImageType}/${isDark ? "w" : "b"}${Utils.getPieceChar(
-            type
-        )}.svg`;
-        image.classList.add("piece-img");
-        this.element.appendChild(image);
+        this.image = document.createElement("img");
+        this.updateSrc();
+        this.image.classList.add("piece-img");
+        this.element.appendChild(this.image);
+    }
+
+    public updateSrc() {
+        this.image.src = `./img/${currentPieceImageType}/${
+            this.isDark ? "w" : "b"
+        }${Utils.getPieceChar(this.type)}.svg`;
     }
 
     public async getMoves(includeCastling: boolean): Promise<Move[]> {

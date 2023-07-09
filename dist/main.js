@@ -11,7 +11,7 @@ export const difficultyDepths = {
     "6": 20,
     "7": 25 // you dare cheat?
 };
-export let stockfishDepth = difficultyDepths["7"];
+export let stockfishDepth = difficultyDepths["0"];
 export var PieceType;
 (function (PieceType) {
     PieceType["Pawn"] = "pawn";
@@ -25,6 +25,8 @@ export var PieceImageType;
 (function (PieceImageType) {
     PieceImageType["Pixel"] = "Pixel";
     PieceImageType["Alpha"] = "Alpha";
+    PieceImageType["Shapes"] = "Shapes";
+    PieceImageType["Disguised"] = "Disguised";
 })(PieceImageType || (PieceImageType = {}));
 const pieceImageSelect = document.getElementById("piece-set");
 const piecePreview = document.getElementById("piece-prev");
@@ -35,6 +37,11 @@ pieceImageSelect.addEventListener("change", () => {
     previewPieces.forEach((piece) => {
         piece.src = `./img/${value}/${piece.dataset.piece}.svg`;
     });
+    for (const square of board.squares.flat()) {
+        if (square.piece) {
+            square.piece.updateSrc();
+        }
+    }
 });
 export let currentPieceImageType = PieceImageType.Pixel;
 board.loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");

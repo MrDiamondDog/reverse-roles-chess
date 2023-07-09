@@ -21,10 +21,13 @@ export class Piece {
         this.element.classList.add("piece");
         this.element.classList.add(Utils.getPieceStr(type));
         this.element.classList.add(isDark ? "light" : "dark");
-        const image = document.createElement("img");
-        image.src = `./img/${currentPieceImageType}/${isDark ? "w" : "b"}${Utils.getPieceChar(type)}.svg`;
-        image.classList.add("piece-img");
-        this.element.appendChild(image);
+        this.image = document.createElement("img");
+        this.updateSrc();
+        this.image.classList.add("piece-img");
+        this.element.appendChild(this.image);
+    }
+    updateSrc() {
+        this.image.src = `./img/${currentPieceImageType}/${this.isDark ? "w" : "b"}${Utils.getPieceChar(this.type)}.svg`;
     }
     getMoves(includeCastling) {
         return __awaiter(this, void 0, void 0, function* () {

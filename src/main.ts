@@ -14,7 +14,7 @@ export const difficultyDepths = {
     "7": 25 // you dare cheat?
 };
 
-export let stockfishDepth = difficultyDepths["7"];
+export let stockfishDepth = difficultyDepths["0"];
 
 export enum PieceType {
     Pawn = "pawn",
@@ -27,7 +27,9 @@ export enum PieceType {
 
 export enum PieceImageType {
     Pixel = "Pixel",
-    Alpha = "Alpha"
+    Alpha = "Alpha",
+    Shapes = "Shapes",
+    Disguised = "Disguised"
 }
 
 const pieceImageSelect = document.getElementById("piece-set") as HTMLSelectElement;
@@ -39,6 +41,11 @@ pieceImageSelect.addEventListener("change", () => {
     previewPieces.forEach((piece) => {
         piece.src = `./img/${value}/${piece.dataset.piece}.svg`;
     });
+    for (const square of board.squares.flat()) {
+        if (square.piece) {
+            square.piece.updateSrc();
+        }
+    }
 });
 
 export let currentPieceImageType = PieceImageType.Pixel;
