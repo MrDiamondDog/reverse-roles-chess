@@ -1,5 +1,5 @@
 import { Board } from "./board.js";
-export const stockfish = new Worker("../node_modules/stockfish/src/stockfish.js");
+export const stockfish = new Worker("./node_modules/stockfish/src/stockfish.js");
 export const board = new Board();
 export const difficultyDepths = {
     "0": 3,
